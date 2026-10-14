@@ -1,0 +1,17 @@
+[14:07:19] Before:
+NAME              READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS        IMAGES                                          SELECTOR
+product-service   2/2     2            2           23m   product-service   docker.io/preciousdipe/product-service:v1.0.0   app.kubernetes.io/name=product-service
+[14:07:19] Starting k6 (50 req/s, 90 s)
+[14:07:34] kubectl set image deployment/product-service product-service=docker.io/preciousdipe/product-service:v1.0.1
+deployment.apps/product-service image updated
+Waiting for deployment "product-service" rollout to finish: 1 out of 2 new replicas have been updated...
+[14:12:35] After:
+NAME              READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS        IMAGES                                          SELECTOR
+product-service   2/2     1            2           29m   product-service   docker.io/preciousdipe/product-service:v1.0.1   app.kubernetes.io/name=product-service
+    errors_5xx
+    http_req_failed
+    errors_5xx.....................: 0      0/s
+    http_req_failed................: 0.00%  0 out of 4295
+    http_reqs......................: 4295   47.749612/s
+[14:12:36] RESULT: PASS - no 5xx or failed requests during the rollout
+[14:12:36] To run again, first: kubectl -n app rollout undo deployment/product-service

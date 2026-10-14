@@ -1,0 +1,5 @@
+# Real credentials never go into git; commit app.env.example instead.
+**/secrets/*.env
+!**/secrets/*.env.example
+node_modules/
+scripts/

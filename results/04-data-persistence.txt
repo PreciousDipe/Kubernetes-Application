@@ -1,0 +1,9 @@
+[19:27:45] Create an order through the Gateway:
+{"id":3,"product_id":1,"product_name":"Maize seed 10kg","quantity":3,"total_price":"45000.00","created_at":"2026-10-14T18:27:46.075Z","status":"pending","updated_at":"2026-10-14T18:27:46.075Z"}
+[19:27:47] Before: 3 orders, newest id 3 | PVC uid=57dbaa2a-b666-45f9-8e00-52e7cfd16c27 | pod uid=853ea471-516a-453d-9a89-61a1ddd07174
+[19:27:47] kubectl delete pod postgres-statefulset-0
+pod "postgres-statefulset-0" deleted from database namespace
+pod/postgres-statefulset-0 condition met
+[19:27:58] After:  3 orders, newest id 3 | PVC uid=57dbaa2a-b666-45f9-8e00-52e7cfd16c27 | pod uid=b4d1b196-927f-4d20-89a2-347702a27189
+[19:28:03] Orders through the API: {"orders":[{"id":3,"product_id":1,"product_name":"Maize seed 10kg","quantity":3,"total_price":"45000.00","created_at":"2026-10-14T18:27:46.075Z","status":"pending","updated_at":"2026-10-14T18:27:46.07
+[19:28:03] RESULT: PASS - new pod, same PVC, data survived

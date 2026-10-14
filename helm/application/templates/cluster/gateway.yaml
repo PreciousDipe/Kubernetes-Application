@@ -1,0 +1,117 @@
+{{- $ns := .Values.namespaces.app }}
+# Settings for the nginx pods NGINX Gateway Fabric creates for app-gateway.
+apiVersion: gateway.nginx.org/v1alpha2
+kind: NginxProxy
+metadata:
+  name: app-gateway-proxy
+  namespace: {{ $ns }}
+  labels:
+    {{- include "shop.labels" . | nindent 4 }}
+spec:
+  kubernetes:
+    service:
+      type: NodePort
+      externalTrafficPolicy: Cluster
+      nodePorts:
+        - port: {{ .Values.gateway.nodePorts.http }}
+          listenerPort: 80
+        - port: {{ .Values.gateway.nodePorts.https }}
+          listenerPort: 443
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .Values.gateway.tlsSecretName }}
+  namespace: {{ $ns }}
+  labels:
+    {{- include "shop.labels" . | nindent 4 }}
+spec:
+  secretName: {{ .Values.gateway.tlsSecretName }}
+  dnsNames:
+    - {{ .Values.gateway.host }}
+  issuerRef:
+    name: {{ .Values.certIssuers.issuerName }}
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: app-gateway
+  namespace: {{ $ns }}
+  labels:
+    app.kubernetes.io/part-of: app
+    {{- include "shop.labels" . | nindent 4 }}
+spec:
+  gatewayClassName: {{ .Values.gateway.className }}
+  infrastructure:
+    parametersRef:
+      group: gateway.nginx.org
+      kind: NginxProxy
+      name: app-gateway-proxy
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      hostname: {{ .Values.gateway.host }}
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: {{ .Values.gateway.host }}
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: {{ .Values.gateway.tlsSecretName }}
+{{- if .Values.networkPolicy.enabled }}
+---
+# The gateway's nginx pods: public on 80/443, may call the NGF control plane and the app.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: app-gateway-network-policy
+  namespace: {{ $ns }}
+  labels:
+    {{- include "shop.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      gateway.networking.k8s.io/gateway-name: app-gateway
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - ports:
+        - protocol: TCP
+          port: 80
+        - protocol: TCP
+          port: 443
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Values.networkPolicy.gatewayControlPlaneNamespace }}
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: nginx-gateway
+      ports:
+        - protocol: TCP
+          port: 8443
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: frontend
+      ports:
+        - protocol: TCP
+          port: {{ .Values.frontend.port }}
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: product-service
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: order-service
+      ports:
+        - protocol: TCP
+          port: {{ .Values.backend.port }}
+{{- end }}

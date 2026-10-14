@@ -1,0 +1,19 @@
+{{ .Chart.Name }} {{ .Chart.AppVersion }} is installed as release "{{ .Release.Name }}" (revision {{ .Release.Revision }}).
+
+Namespaces:  {{ .Values.namespaces.app }} (frontend + APIs), {{ .Values.namespaces.database }} (PostgreSQL), {{ .Values.namespaces.cache }} (Redis)
+
+Watch the pods come up:
+  kubectl get pods -n {{ .Values.namespaces.app }} -w
+  kubectl get pods -n {{ .Values.namespaces.database }}
+  kubectl get pods -n {{ .Values.namespaces.cache }}
+
+Gateway:  https://{{ .Values.gateway.host }}:{{ .Values.gateway.redirectPort }}/
+  /              -> frontend
+  /api/products  -> product-service
+  /api/orders    -> order-service
+  (plain http on the same host is redirected to https)
+
+Useful Helm commands:
+  helm status {{ .Release.Name }}
+  helm history {{ .Release.Name }}
+  helm rollback {{ .Release.Name }} <revision>

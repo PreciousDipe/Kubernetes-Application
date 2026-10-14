@@ -1,0 +1,40 @@
+[19:16:22] Before:
+NAME                  REFERENCE                    TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+product-service-hpa   Deployment/product-service   cpu: 1%/60%   2         10        2          16m
+[19:16:22] Starting k6 (ramps to 200 req/s, holds 2 min, stops)
+[19:16:38] t+15s cpu: 0%/60% replicas=2
+[19:16:53] t+30s cpu: 15%/60% replicas=2
+[19:17:08] t+45s cpu: 59%/60% replicas=2
+[19:17:24] t+60s cpu: 75%/60% replicas=2
+[19:17:39] t+75s cpu: 83%/60% replicas=3
+[19:17:55] t+90s cpu: 96%/60% replicas=3
+[19:18:10] t+105s cpu: 73%/60% replicas=3
+[19:18:25] t+120s cpu: 77%/60% replicas=3
+[19:18:41] t+135s cpu: 72%/60% replicas=4
+[19:18:56] t+150s cpu: 63%/60% replicas=4
+[19:19:11] t+165s cpu: 65%/60% replicas=4
+[19:19:27] t+180s cpu: 61%/60% replicas=4
+[19:19:42] t+195s cpu: 58%/60% replicas=4
+[19:19:57] t+210s cpu: 47%/60% replicas=4
+[19:20:13] t+225s cpu: 36%/60% replicas=4
+[19:20:28] t+240s cpu: 11%/60% replicas=4
+[19:20:44] t+255s cpu: 0%/60% replicas=4
+[19:20:59] t+270s cpu: 0%/60% replicas=4
+[19:21:15] t+285s cpu: 3%/60% replicas=3
+[19:21:30] t+300s cpu: 0%/60% replicas=2
+[19:21:46] t+315s cpu: 0%/60% replicas=2
+[19:22:01] t+330s cpu: 0%/60% replicas=2
+[19:22:17] t+345s cpu: 0%/60% replicas=2
+[19:22:32] t+360s cpu: 0%/60% replicas=2
+[19:22:48] t+375s cpu: 0%/60% replicas=2
+[19:23:03] t+390s cpu: 0%/60% replicas=2
+[19:23:19] t+405s cpu: 0%/60% replicas=2
+[19:23:35] t+420s cpu: 0%/60% replicas=2
+    http_req_failed................: 0.00%  0 out of 34499
+    http_reqs......................: 34499  164.247688/s
+  Normal   SuccessfulRescale             23m                  horizontal-pod-autoscaler  New size: 2; reason: Current number of replicas below Spec.MinReplicas
+  Normal   SuccessfulRescale             6m21s                horizontal-pod-autoscaler  New size: 3; reason: cpu resource utilization (percentage of request) above target
+  Normal   SuccessfulRescale             5m21s (x2 over 21m)  horizontal-pod-autoscaler  New size: 4; reason: cpu resource utilization (percentage of request) above target
+  Normal   SuccessfulRescale             2m50s (x2 over 19m)  horizontal-pod-autoscaler  New size: 3; reason: All metrics below target
+  Normal   SuccessfulRescale             2m20s (x2 over 18m)  horizontal-pod-autoscaler  New size: 2; reason: All metrics below target
+[19:23:35] RESULT: PASS - the HPA scaled product-service with the load

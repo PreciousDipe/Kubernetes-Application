@@ -1,0 +1,133 @@
+namespaces:
+  create: true             
+  app: app                
+  database: database      
+  cache: cache             
+  podSecurity: restricted
+
+# ---
+images:
+  pullPolicy: IfNotPresent
+  frontend: busybox:1.37.0
+  productService: docker.io/preciousdipe/product-service:v1.0.0
+  orderService: docker.io/preciousdipe/order-service:v1.0.0
+  postgres: postgres:17.11-alpine3.24
+  redis: redis:8.8.3-alpine
+
+secrets:
+  create: true
+  name: apps-secret
+  postgresUser: platform-user
+  postgresPassword: ""       # required: passed at install time, never committed
+  redisPassword: ""          # required: letters, numbers, dashes (used in a URL)
+
+# ---
+frontend:
+  port: 8080
+  hpa:
+    minReplicas: 2
+    maxReplicas: 4
+    targetCPU: 50
+  resources:
+    requests:
+      cpu: 10m
+      memory: 8Mi
+    limits:
+      cpu: 100m
+      memory: 32Mi
+
+# ---
+backend:
+  port: 3000
+  nodeEnv: production
+  cacheTtlSeconds: 60
+  productService:
+    hpa:
+      minReplicas: 2
+      maxReplicas: 6
+      targetCPU: 50
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+  orderService:
+    hpa:
+      minReplicas: 2
+      maxReplicas: 6
+      targetCPU: 50
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+  migrate:                   
+    resources:
+      requests:
+        cpu: 50m
+        memory: 32Mi
+      limits:
+        cpu: 200m
+        memory: 64Mi
+
+
+hpaBehavior:
+  scaleUpPods: 2
+  scaleUpPeriodSeconds: 15
+  scaleDownStabilizationSeconds: 60
+  scaleDownPods: 1
+  scaleDownPeriodSeconds: 30
+
+# ---
+database:
+  name: app
+  pgdata: /var/lib/postgresql/data/pgdata
+  storage: 1Gi
+  storageClassName: ""      
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: "1"
+      memory: 512Mi
+
+# ---
+cache:
+  maxmemory: 100mb
+  maxmemoryPolicy: allkeys-lru
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 192Mi
+
+# ---
+pdb:
+  minAvailable: 1
+
+# ---
+networkPolicy:
+  enabled: true
+  gatewayControlPlaneNamespace: nginx-gateway
+
+# ---
+certIssuers:
+  create: true               
+  issuerName: shop-ca
+
+# ---
+gateway:
+  className: nginx
+  host: microservice-shop.localhost
+  tlsSecretName: gateway-tls
+  nodePorts:
+    http: 30080
+    https: 30443
+  redirectPort: 8443         

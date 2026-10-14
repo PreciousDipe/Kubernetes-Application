@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-config
+  namespace: cache
+  labels:
+    app.kubernetes.io/part-of: cache
+data:
+  REDIS_MAXMEMORY: "100mb"
+  REDIS_MAXMEMORY_POLICY: "allkeys-lru"

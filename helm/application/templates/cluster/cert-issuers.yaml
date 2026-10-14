@@ -1,0 +1,41 @@
+{{- if .Values.certIssuers.create }}
+# Local certificate authority: self-signed bootstrap -> root CA -> CA ClusterIssuer.
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: selfsigned-bootstrap
+  labels:
+    {{- include "shop.labels" . | nindent 4 }}
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: shop-root-ca
+  namespace: cert-manager
+  labels:
+    {{- include "shop.labels" . | nindent 4 }}
+spec:
+  isCA: true
+  commonName: shop-local-root-ca
+  secretName: shop-root-ca
+  duration: 87600h
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: selfsigned-bootstrap
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: {{ .Values.certIssuers.issuerName }}
+  labels:
+    {{- include "shop.labels" . | nindent 4 }}
+spec:
+  ca:
+    secretName: shop-root-ca
+{{- end }}

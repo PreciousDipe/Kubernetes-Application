@@ -1,0 +1,19 @@
+{{- if .Values.namespaces.create }}
+{{- range $key := list "app" "database" "cache" }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ index $.Values.namespaces $key }}
+  labels:
+    app.kubernetes.io/part-of: {{ index $.Values.namespaces $key }}
+    pod-security.kubernetes.io/enforce: {{ $.Values.namespaces.podSecurity }}
+    pod-security.kubernetes.io/enforce-version: latest
+    pod-security.kubernetes.io/warn: {{ $.Values.namespaces.podSecurity }}
+    pod-security.kubernetes.io/warn-version: latest
+    {{- include "shop.labels" $ | nindent 4 }}
+  annotations:
+    # "helm uninstall" leaves the namespace (and the database volume in it) in place.
+    helm.sh/resource-policy: keep
+{{- end }}
+{{- end }}

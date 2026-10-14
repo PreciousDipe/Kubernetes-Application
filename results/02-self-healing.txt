@@ -1,0 +1,105 @@
+[14:14:26] Before:
+NAME                               READY   STATUS             RESTARTS   AGE     IP               NODE                                          NOMINATED NODE   READINESS GATES
+frontend-5c78df7b5f-7sz5x          1/1     Running            0          30m     10.244.184.206   microservice-kubernetes-application-worker2   <none>           <none>
+frontend-5c78df7b5f-hxvs4          1/1     Running            0          31m     10.244.186.137   microservice-kubernetes-application-worker    <none>           <none>
+product-service-6fbfb74455-s22fw   1/1     Running            0          30m     10.244.184.205   microservice-kubernetes-application-worker2   <none>           <none>
+product-service-6fbfb74455-xl9rx   1/1     Running            0          31m     10.244.186.139   microservice-kubernetes-application-worker    <none>           <none>
+product-service-7999b66f9d-76xnr   0/1     ImagePullBackOff   0          6m52s   10.244.184.207   microservice-kubernetes-application-worker2   <none>           <none>
+[14:14:28] kubectl delete pod product-service-6fbfb74455-s22fw frontend-5c78df7b5f-7sz5x
+pod "product-service-6fbfb74455-s22fw" deleted from app namespace
+pod "frontend-5c78df7b5f-7sz5x" deleted from app namespace
+[14:14:28] App while the pods are replaced: /api/products -> 200, / -> 200
+[14:14:30] t+2s
+NAME                               READY   STATUS              RESTARTS   AGE
+frontend-5c78df7b5f-7sz5x          1/1     Terminating         0          30m
+frontend-5c78df7b5f-hxvs4          1/1     Running             0          31m
+frontend-5c78df7b5f-ztw9t          0/1     ContainerCreating   0          3s
+product-service-6fbfb74455-nj84n   0/1     Init:0/1            0          3s
+product-service-6fbfb74455-s22fw   1/1     Terminating         0          30m
+product-service-6fbfb74455-xl9rx   1/1     Running             0          31m
+product-service-7999b66f9d-76xnr   0/1     ImagePullBackOff    0          6m56s
+[14:14:34] t+4s
+NAME                               READY   STATUS             RESTARTS   AGE
+frontend-5c78df7b5f-7sz5x          1/1     Terminating        0          30m
+frontend-5c78df7b5f-hxvs4          1/1     Running            0          31m
+frontend-5c78df7b5f-ztw9t          0/1     Running            0          7s
+product-service-6fbfb74455-nj84n   0/1     Init:0/1           0          7s
+product-service-6fbfb74455-s22fw   1/1     Terminating        0          30m
+product-service-6fbfb74455-xl9rx   1/1     Running            0          31m
+product-service-7999b66f9d-76xnr   0/1     ImagePullBackOff   0          7m
+[14:14:38] t+6s
+NAME                               READY   STATUS             RESTARTS   AGE
+frontend-5c78df7b5f-7sz5x          1/1     Terminating        0          30m
+frontend-5c78df7b5f-hxvs4          1/1     Running            0          31m
+frontend-5c78df7b5f-ztw9t          1/1     Running            0          10s
+product-service-6fbfb74455-nj84n   0/1     Running            0          10s
+product-service-6fbfb74455-xl9rx   1/1     Running            0          31m
+product-service-7999b66f9d-76xnr   0/1     ImagePullBackOff   0          7m3s
+[14:14:40] t+8s
+NAME                               READY   STATUS             RESTARTS   AGE
+frontend-5c78df7b5f-7sz5x          1/1     Terminating        0          31m
+frontend-5c78df7b5f-hxvs4          1/1     Running            0          31m
+frontend-5c78df7b5f-ztw9t          1/1     Running            0          13s
+product-service-6fbfb74455-nj84n   0/1     Running            0          13s
+product-service-6fbfb74455-xl9rx   1/1     Running            0          31m
+product-service-7999b66f9d-76xnr   0/1     ImagePullBackOff   0          7m6s
+[14:14:43] t+10s
+NAME                               READY   STATUS             RESTARTS   AGE
+frontend-5c78df7b5f-7sz5x          1/1     Terminating        0          31m
+frontend-5c78df7b5f-hxvs4          1/1     Running            0          31m
+frontend-5c78df7b5f-ztw9t          1/1     Running            0          15s
+product-service-6fbfb74455-nj84n   0/1     Running            0          15s
+product-service-6fbfb74455-xl9rx   1/1     Running            0          31m
+product-service-7999b66f9d-76xnr   0/1     ImagePullBackOff   0          7m8s
+[14:14:46] t+12s
+NAME                               READY   STATUS             RESTARTS   AGE
+frontend-5c78df7b5f-7sz5x          1/1     Terminating        0          31m
+frontend-5c78df7b5f-hxvs4          1/1     Running            0          31m
+frontend-5c78df7b5f-ztw9t          1/1     Running            0          18s
+product-service-6fbfb74455-nj84n   1/1     Running            0          18s
+product-service-6fbfb74455-xl9rx   1/1     Running            0          31m
+product-service-7999b66f9d-76xnr   0/1     ImagePullBackOff   0          7m11s
+[14:14:48] t+14s
+NAME                               READY   STATUS             RESTARTS   AGE
+frontend-5c78df7b5f-7sz5x          1/1     Terminating        0          31m
+frontend-5c78df7b5f-hxvs4          1/1     Running            0          31m
+frontend-5c78df7b5f-ztw9t          1/1     Running            0          21s
+product-service-6fbfb74455-nj84n   1/1     Running            0          21s
+product-service-6fbfb74455-xl9rx   1/1     Running            0          31m
+product-service-7999b66f9d-76xnr   0/1     ImagePullBackOff   0          7m14s
+[14:14:52] t+16s
+NAME                               READY   STATUS             RESTARTS   AGE
+frontend-5c78df7b5f-7sz5x          1/1     Terminating        0          31m
+frontend-5c78df7b5f-hxvs4          1/1     Running            0          31m
+frontend-5c78df7b5f-ztw9t          1/1     Running            0          24s
+product-service-6fbfb74455-nj84n   1/1     Running            0          24s
+product-service-6fbfb74455-xl9rx   1/1     Running            0          31m
+product-service-7999b66f9d-76xnr   0/1     ImagePullBackOff   0          7m17s
+[14:14:54] t+18s
+NAME                               READY   STATUS             RESTARTS   AGE
+frontend-5c78df7b5f-7sz5x          1/1     Terminating        0          31m
+frontend-5c78df7b5f-hxvs4          1/1     Running            0          31m
+frontend-5c78df7b5f-ztw9t          1/1     Running            0          27s
+product-service-6fbfb74455-nj84n   1/1     Running            0          27s
+product-service-6fbfb74455-xl9rx   1/1     Running            0          31m
+product-service-7999b66f9d-76xnr   0/1     ImagePullBackOff   0          7m20s
+[14:14:57] t+20s
+NAME                               READY   STATUS             RESTARTS   AGE
+frontend-5c78df7b5f-7sz5x          1/1     Terminating        0          31m
+frontend-5c78df7b5f-hxvs4          1/1     Running            0          31m
+frontend-5c78df7b5f-ztw9t          1/1     Running            0          29s
+product-service-6fbfb74455-nj84n   1/1     Running            0          29s
+product-service-6fbfb74455-xl9rx   1/1     Running            0          31m
+product-service-7999b66f9d-76xnr   0/1     ImagePullBackOff   0          7m22s
+[14:15:00] t+22s
+NAME                               READY   STATUS             RESTARTS   AGE
+frontend-5c78df7b5f-7sz5x          0/1     Error              0          31m
+frontend-5c78df7b5f-hxvs4          1/1     Running            0          31m
+frontend-5c78df7b5f-ztw9t          1/1     Running            0          32s
+product-service-6fbfb74455-nj84n   1/1     Running            0          32s
+product-service-6fbfb74455-xl9rx   1/1     Running            0          31m
+product-service-7999b66f9d-76xnr   0/1     ImagePullBackOff   0          7m25s
+33s         Normal    SuccessfulCreate               replicaset/frontend-5c78df7b5f                Created pod: frontend-5c78df7b5f-ztw9t
+33s         Normal    SuccessfulCreate               replicaset/product-service-6fbfb74455         Created pod: product-service-6fbfb74455-nj84n
+[14:15:01] App still answering: 200
+[14:15:02] RESULT: PASS - deleted pods replaced, Deployments back to full strength
